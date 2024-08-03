@@ -244,6 +244,7 @@ runs:
 
     - name: Install APT PPA
       if: ${{ inputs.cache == 'true' }}
+      shell: bash
       # Hardcoded to "jammy" or Ubuntu LTS 22.04
       run: |
         wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
