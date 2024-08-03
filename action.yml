@@ -245,11 +245,11 @@ runs:
     - name: Install APT PPA
       if: ${{ inputs.cache == 'true' }}
       shell: bash
-      # Hardcoded to "jammy" or Ubuntu LTS 22.04
       run: |
+        . /etc/os-release
         wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-        echo "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-${{ inputs.version }} main" | sudo tee -a /etc/apt/sources.list.d/llvm.list
-        echo "deb-src http://apt.llvm.org/jammy/ llvm-toolchain-jammy-${{ inputs.version }} main" | sudo tee -a /etc/apt/sources.list.d/llvm.list
+        echo "deb http://apt.llvm.org/$UBUNTU_CODENAME/ llvm-toolchain-$UBUNTU_CODENAME-${{ inputs.version }} main" | sudo tee -a /etc/apt/sources.list.d/llvm.list
+        echo "deb-src http://apt.llvm.org/$UBUNTU_CODENAME/ llvm-toolchain-$UBUNTU_CODENAME-${{ inputs.version }} main" | sudo tee -a /etc/apt/sources.list.d/llvm.list
         sudo apt-get update -o Dir::Etc::sourcelist="sources.list.d/llvm.list" -o Dir::Etc::sourceparts="-" -o APT::Get::List-Cleanup="0"
     
     - name: Cache clang dependencies

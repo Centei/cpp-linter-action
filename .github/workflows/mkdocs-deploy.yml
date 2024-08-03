@@ -1,9 +1,0 @@
-name: MkDocs Deploy
-
-on:
-  push:
-  workflow_dispatch:
-
-jobs:
-  build-docs:
-    uses: cpp-linter/.github/.github/workflows/mkdocs.yml@main
