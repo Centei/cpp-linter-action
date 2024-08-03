@@ -242,6 +242,22 @@ runs:
         python-version: '3.10'
         update-environment: false
 
+    - name: Install APT PPA
+      if: ${{ inputs.cache == 'true' }}
+      # Hardcoded to "jammy" or Ubuntu LTS 22.04
+      run: |
+        wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+        echo "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-${{ inputs.version }} main" | sudo tee -a /etc/apt/sources.list.d/llvm.list
+        echo "deb-src http://apt.llvm.org/jammy/ llvm-toolchain-jammy-${{ inputs.version }} main" | sudo tee -a /etc/apt/sources.list.d/llvm.list
+        sudo apt-get update -o Dir::Etc::sourcelist="sources.list.d/llvm.list" -o Dir::Etc::sourceparts="-" -o APT::Get::List-Cleanup="0"
+    
+    - name: Cache clang dependencies
+      if: ${{ inputs.cache == 'true' }}
+      uses: awalsh128/cache-apt-pkgs-action@latest
+      with:
+        packages: clang-format-${{ inputs.version }} clang-tidy-${{ inputs.version }}
+        version: 1.0
+
     - name: Install Linux clang dependencies
       if: runner.os == 'Linux'
       shell: bash
